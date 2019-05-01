@@ -34,7 +34,7 @@ str_locate(splt,"@")
 str_locate_all(splt,"@")
 
 #call dictionary of words
-words[1]
+words
 
 #return values ends with "ed"
 for (i in 1:length(words)){
