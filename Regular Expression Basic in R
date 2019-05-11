@@ -1,0 +1,79 @@
+#Their are few specific type of functions we will explore. e.g grep(),regexpr(),gsub() etc.
+#in this section we will discuss about them and will see how these can help us to do better text mining
+library(rvest)
+#read html page
+#In the following section we are scrapintg the HTML page with more specific need.
+#In the page their are lot of things and we dont want all of them.
+#we need only the paragraph that talks about blondes
+#so we have created specific code that will extract only the text that we need
+#%>% is a pipe operator, this is a parrt of magrittr() package and used to simplify coding
+art <- read_html("http://news.bbc.co.uk/2/hi/health/2284783.stm")
+art_text <- art %>%
+  html_nodes("[class='bodytext']") %>%
+  html_text()
+
+art_text
+
+#The first regular expression we will be working with gsub()
+#this function substitutes specific patteren with anything we want.
+#the text we have returned have lot of line breakes, e.g. "\r,\t" etc
+#our first job is to replace all of them with nothing.
+art_text2 <- gsub("\\\\","",art_text)
+art_text2 <- gsub("[\r\t]","",art_text2)
+
+#in the last section we will explore more about gsub()
+
+art_text2
+
+write.table(art_text2,"Article.txt", row.names = FALSE, col.names = FALSE)
+#we have saved our file as a text in the existing working directory, we will read it again
+art <- readLines("Article.txt")
+art
+
+#grep returns value where string matches with the pattern
+grep(pattern = "blonde",x = art)
+
+#grepl returns true or false indicating the existence of the pattern in the string
+
+grepl(pattern = "blonde",x = art)
+
+#regexpr tells us the position of the paatern in the string, but unfurtunetely gives the position 
+#of first occurance only from left
+
+#we will try to find anything written after blond
+
+regexpr("[B|b]lond(.*)", art)
+
+#all negative numbers indicates no charecter exists in that line.
+#[B|b] this indicates search for both small "b" and capital "B" in the name blond
+#attr(,"match.length") - this section indicates how many charecters have been matched after
+#after fiding the first match.
+#for example- the first match was found on the 18 charecter of the 2nd line. the match continued 
+#to 59 charecter long.
+
+#lets see this actually in action.
+
+substr(art[2],18, 18+59-1)
+substr(art[4],52, 52+70-1)
+
+#lets try to extract the word blonde adn all after words from each line
+
+bl <- regexpr("[B|b]lond(.*)", art)
+regmatches(art,bl)
+
+#regmatch returns values that has been identified by regexpr
+
+#lets try to return thw whole sentences with the word blond in it
+bl2 <- regexpr("(.*)[B|b]lond(.*)", art)
+regmatches(art,bl2)
+
+#sub(), gsub() thesetwo functions helps in replacing a certain string match with a pattern
+#lets explore these functions
+
+sub("blonde", "dlonde",art)[52]
+
+#notice the output. There are two "blonde" in the sentence, but only the firs one was replaced with "dlonde"
+
+gsub("blonde", "dlonde",art)[52]
+
+#notice both "blonde" are replaced by "dlonde".
