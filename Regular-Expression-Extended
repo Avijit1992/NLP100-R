@@ -1,0 +1,83 @@
+#Create a vector of mixbag of words and number
+AN <- c("asad","009rter","route334","logistic","990324567","&&QCD4355")
+#lets return data with numbers
+grep("[0-9]",AN, value = T)
+
+#This particular function will return everythin that has a number
+#lets add another words to out vector
+
+AN<- append("$$%%#",AN)
+
+#Now we will try to return the word with special charecters only
+#the best way to do thid is to mention charecters unded double slash, this will help in getting
+#the vector with specific special charecter
+grep("\\$",AN, value = T)
+#return every words with puntuation charecter
+grep("[[:punct:]]",AN, value = T)
+#return every words with alphabetic charecter in the word
+grep("[[:alpha:]]",AN, value = T)
+
+
+#Return only uppercase letters
+grep("[[:upper:]]",AN, value = T)
+#and lowercase
+grep("[[:lower:]]",AN, value = T)
+
+#lets create a vector of numbers
+
+n <- as.character(c(1.112, 0, 8997, 9.9, 4.5567, 4.320, 1.1))
+
+#we will try to return specific numbers
+grep("1",n, value = T)
+
+#starts with 9 and with decimal places
+grep("^9+\\..",n, value = T)
+#starts with 1 and with one decimal places (the second "." indicates number of decimal places after ".")
+grep("^1+\\..$",n, value = T)
+grep("^[0-9]+\\..$",n, value = T)
+#return number with decimal places excluding 0 and 1 in the first place
+grep("^[2-9]+\\..$",n, value = T)
+
+
+
+word <- 'We-Love-Supervised. 2000 Kudos @onlyLove'
+
+library(stringr)
+
+#word is data dictionary, we will look for a specific pattern in the dictionary, we are looking for 
+#occurace of two vowels side by side
+str_extract_all(word,"[aeiouAEIOU]{2,}")
+
+#str_extract_all function returns list, we will unlist the result and pass the whole argument
+#in table function()
+
+words %>% 
+  str_extract_all("[aeiouAEIOU]{2,}") %>% 
+  unlist() %>% 
+  table() %>% 
+  barplot()
+
+#the same thing can be done with a combination of vowels and consonents
+#we are passing two argument in the pattern, one with vowels another with selected 
+#consonants
+words %>% 
+  tolower() %>% 
+  str_extract_all("[aeiou][kltpjv]") %>% 
+  unlist() %>% 
+  table() %>% 
+  barplot()
+
+#Return words that ends with (ing|ly|ed|ious|ies|ive|es|s|ment)
+
+words %>% 
+  tolower() %>% 
+  str_extract_all("(ing|ly|ed|ious|ies|ive|es|s|ment)$") %>% 
+  unlist() %>% 
+  table()
+
+#remove the table argument from above and add the number of element you want to see at the end of
+#str_extract_all argument, for top 20 add [1:20] at the end.
+
+#the above process from a single word "processing"
+str_extract_all("processing","(ing|ly|ed|ious|ies|ive|es|s|ment)$")
+
