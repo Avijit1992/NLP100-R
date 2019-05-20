@@ -1,0 +1,69 @@
+---
+title: "Tokenization"
+output: html_document
+---
+
+```{r}
+raw = "When I'M a Duchess,' she said to herself, (not in a very hopeful tone... though), 'I won't have any pepper in my kitchen AT ALL. Soup does very... well without--Maybe it's always pepper that makes people hot-tempered,'.."
+
+library(stringr)
+str_split(raw," ")
+
+```
+\\s indicates any white space charecter
+```{r}
+str_split(raw,'\\s')
+
+```
+\\W (uppercase) indicates split when any non alpha non numeric sign appears, w(lowercase) dose the opposite. try yourself
+```{r}
+sample = 'I am typing (text data) '
+str_split(sample,'\\W')
+
+```
+In the following section we will learn about tokenization. We will create a large string and explore tokenization on the string
+```{r}
+
+library(tokenizers)
+string <- c("At Waterloo we were fortunate in catching a train for Leatherhead, where we hired a trap at the station inn and drove for four or five miles through the lovely Surrey lanes. It was a perfect day, with a bright sun and a few fleecy clouds in the heavens. The trees and wayside hedges were just throwing out their first green shoots, and the air was full of the pleasant smell of the moist earth. To me at least there was a strange contrast between the sweet promise of the spring and this" )
+string
+```
+We will try multiple type of tokenization in the following section. one of them is word tokenization. word tokenization basically creates a large 
+vector of words taken from the souce. e.g tokenization of the word "I Love You" is a vector of three words "I", "Love", "You". this is a example of single word tokenization. In the following section we will explore further about this. the library we are going to use is tokenizers, we have already loded the library in our environment
+```{r}
+word_token_1 <- tokenize_words(string)
+word_token_1
+
+```
+The above example is an example of single word tokens
+Below we will learn about multiple word tokens. Below code is for two word tokens. This is importaint beacuse their are 
+certain words that has different meaning when combined with other words. This kind of tokenization refers to Ngram tokenization. N can vary from 2 to infinty.
+
+Below we will run a loop that will give us tokens of words from 2 to 5. i.e. this will start with 2 tokens and continue till 5 tokens
+```{r}
+for (i in 2:5) {
+  print(tokenize_ngrams(string,n=i))
+}
+
+```
+We can create charecter tokens also, that means we can seperate each charecter
+```{r}
+tokenize_characters(string)
+
+```
+This is also possible to create multicharecter tokens
+```{r}
+for (i in 2:4) {
+ print(tokenize_character_shingles(string, n = i)) 
+}
+```
+This is also possible to do sentence tokens.
+```{r}
+tokenize_sentences(string)
+```
+This has been noticed that sometime there are large text to be processed. For e.g you are working in a firm and your company scrap academic articles. Most of the time these articles are very large documents. A 20 page article is quite big for processing at once. Creating multiple chuncks from those articles is very helpful in analysing the underling text. chunck size indicates the no of word you want to put inside a chunk
+```{r}
+library(tokenizers)
+chunk_text(string, chunk_size = 10, doc_id = "string")
+
+```
