@@ -1,0 +1,79 @@
+---
+title: "Steming & Lematization"
+output: html_document
+---
+
+In the following section we will learn about Stemming & Lemmatization. Let's start with loading required packages
+
+Lets read a Webpage for this purpose
+
+```{r}
+library(textstem)
+
+```
+Stemming
+```{r}
+dw <- c('driver', 'drive', 'drove', 'driven', 'drives', 'driving')
+
+stem_words(dw)
+
+```
+Lemmatizing
+
+```{r}
+
+lemmatize_words(dw)
+
+```
+The most visible difference of stemming and lemmatizing can be seen while working 
+with "Be" verbs
+```{r}
+bw <- c('are', 'am', 'being', 'been', 'be')
+stem_words(bw)
+```
+
+
+```{r}
+lemmatize_words(bw)
+```
+
+
+```{r}
+library(stringr)
+sent <- unlist(tokenizers::tokenize_words(sentences))
+head(data.frame(cbind(stem_words(sent),lemmatize_words(sent))),20)
+```
+We will discuss three process of generating lemma,
+The first process uses koRpus package and Treetagger to generate lemma dictionary
+Treetagger is a external instllation and in the most relaible among all three methods. It takes time but gives the most accurate reasult
+```{r}
+lemma_dictionary_tt <- make_lemma_dictionary(sent, engine = 'treetagger')
+lemma_dictionary_tt %>% 
+  head(20)
+```
+
+the second process uses hunspell package to create lemma dictionary
+```{r}
+lemma_dictionary_hs <- make_lemma_dictionary(sent, engine = 'hunspell')
+lemma_dictionary_hs %>% 
+  head(20)
+```
+
+the third process takes lexicon package to generate lemma dictionary
+```{r}
+lemma_dictionary_lx <- make_lemma_dictionary(sent, engine = 'lexicon')
+lemma_dictionary_lx %>% 
+  head(20)
+```
+We will use the lemma_dictionary_tt in the "sentence" dataset. the function we will use is lemmatize_strings(). This will first tke sentences , create tokens, math with the dictionary, and finally create sentences again with the new words found in the dictionary  
+
+```{r}
+data.frame(cbind(lemmatize_strings(sentences, dictionary = lemma_dictionary_tt),sentences)) %>% 
+  head(20)
+```
+Lets try with another dictionary
+
+```{r}
+data.frame(cbind(lemmatize_strings(sentences, dictionary = lemma_dictionary_hs),sentences))%>% 
+  head(20)
+```
