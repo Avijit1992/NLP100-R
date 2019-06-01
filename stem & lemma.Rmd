@@ -43,9 +43,9 @@ library(stringr)
 sent <- unlist(tokenizers::tokenize_words(sentences))
 head(data.frame(cbind(stem_words(sent),lemmatize_words(sent))),20)
 ```
-We will discuss three process of generating lemma,
+We will discuss three process of generating lemma dictionary,
 The first process uses koRpus package and Treetagger to generate lemma dictionary
-Treetagger is a external instllation and in the most relaible among all three methods. It takes time but gives the most accurate reasult
+Treetagger is a external instllation and is the most relaible among all three methods. It takes time but gives the most accurate reasult
 ```{r}
 lemma_dictionary_tt <- make_lemma_dictionary(sent, engine = 'treetagger')
 lemma_dictionary_tt %>% 
